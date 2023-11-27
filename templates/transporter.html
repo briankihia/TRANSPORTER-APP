@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .form-container {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .location-form, .goods-form {
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 20px;
+        margin: 10px;
+        max-width: 400px;
+        box-sizing: border-box;
+    }
+
+    input, select {
+        width: calc(100% - 20px);
+        margin-bottom: 10px;
+        padding: 8px;
+    }
+
+    button {
+        padding: 10px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    #distance {
+        margin-top: 20px;
+        font-weight: bold;
+    }
+</style>
+
+
+<div class="form-container">
+    <!-- Left Form: Location Information -->
+    <div id="locationForm" class="location-form">
+        <h2>Location Details</h2>
+        <form>
+            <label for="oldLatitude">Shared Latitude:</label>
+            <input type="text" id="oldLatitude" readonly>
+
+            <label for="oldLongitude">Shared Longitude:</label>
+            <input type="text" id="oldLongitude" readonly>
+
+            <button onclick="shareLocation()">Share My Location</button>  <br>
+
+            <label for="newLatitude">New Latitude:</label>
+            <input type="text" id="newLatitude" placeholder="Enter latitude" required>
+
+            <label for="newLongitude">New Longitude:</label>
+            <input type="text" id="newLongitude" placeholder="Enter longitude" required>
+
+            
+            <button onclick="calculateDistance();">Calculate Distance</button>
+            
+
+            <!-- <div id="distance"></div> -->
+        </form>
+    </div>
+
+    <!-- Right Form: Goods Information -->
+    <div id="goodsForm" class="goods-form">
+        <h2>Goods Information</h2>
+        <!-- <form method="post" action="{% url 'transporter'%}">
+            {% csrf_token %} -->
+          
+
+            <label for="distance">Distance:</label>
+            <input type="text" id="distance" placeholder="Distance" readonly>
+
+            <label for="transportFee">TransportFee:</label>
+            <input type="text" id="transportFee" placeholder="TransportFee" readonly>
+
+            <label for="serviceFee">Service Fee:</label>
+            <input type="text" id="serviceFee" placeholder="ServiceFee" readonly>
+
+
+
+            <!-- <div id="distance"></div> -->
+            <button onclick="calculatePrice()">Calculate Price</button>
+            <p id="transportFee"></p>
+
+            <!-- <button onclick="validateForms()">Submit</button> -->
+        <!-- </form> -->
+    </div>
+
+
+    <!-- <div id="goodsForm" class="goods-form">
+        <h2>Goods Information</h2>
+        <form method="post" action="{% url 'transporter'%}">
+            {% csrf_token %}
+            <label for="valueOfGoods">Goods Value:</label>
+            <input type="text" id="valueOfGoods" placeholder="Enter goods value" required>
+
+            <label for="deliverBefore">Deliver Before:</label>
+            <input type="date" id="deliverBefore" required >
+
+            <label for="distance">Distance:</label>
+            <input type="text" id="distance" placeholder="Distance" readonly>
+
+            <label for="transportFee">TransportFee:</label>
+            <input type="text" id="transportFee" placeholder="TransportFee" readonly>
+
+            <label for="serviceFee">Service Fee:</label>
+            <input type="text" id="serviceFee" placeholder="ServiceFee" readonly>
+
+
+
+            
+            <button onclick="calculatePrice()">Calculate Price</button>
+            <p id="transportFee"></p>
+
+            <button onclick="validateForms()">Submit</button>
+        </form>
+    </div> -->
+
+    <div id="goodsForm" class="goods-form">
+        <h2>Goods Information</h2>
+        <form method="post" action="{% url 'transporter'%}">
+            {% csrf_token %}
+            <label for="goods_value">Goods Value:</label>
+            <input type="text" id="goods_value" name="goods_value" placeholder="Enter goods value" required>
+
+            <label for="deliver_before">Deliver Before:</label>
+            <input type="date" id="deliver_Before" name="deliver_before" required >
+
+            <label for="distance_to">Distance:</label>
+            <input type="text" id="distance_to" name="distance_to" placeholder="Distance" required>
+
+            <label for="transport_fee">TransportFee:</label>
+            <input type="text" id="transport_fee"  name="transport_fee" placeholder="TransportFee" required>
+
+            <label for="service_fee">Service Fee:</label>
+            <input type="text" id="service_fee" name="service_fee" placeholder="ServiceFee" required>
+
+
+            <button onclick="validateForms()">Submit</button>
+        </form>
+    </div>
+
+</div>
+
+
+
+    <!-- <form>
+        <button onclick="shareLocation()">shareLocation</button>    
+
+        <label for="oldLatitude">Shared Latitude:</label>
+        <input type="text" id="oldLatitude" readonly>
+
+        <label for="oldLongitude">Shared Longitude:</label>
+        <input type="text" id="oldLongitude" readonly>
+
+        <label for="newLatitude">New Latitude:</label>
+        <input type="text" id="newLatitude" placeholder="Enter latitude" required>
+
+        <label for="newLongitude">New Longitude:</label>
+        <input type="text" id="newLongitude" placeholder="Enter longitude" required>
+
+        <button onclick="calculateDistance()">CalculateDistance</button>   
+
+        <div id="distance"></div>
+    </form> -->
+
+
+<script>
+    var sharedLocation = { latitude: 0, longitude: 0 };
+    var newLocation = { latitude: 0, longitude: 0 };
+
+    function shareLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                sharedLocation.latitude = position.coords.latitude;
+                sharedLocation.longitude = position.coords.longitude;
+
+                // Display the shared location details
+                document.getElementById('oldLatitude').value = sharedLocation.latitude.toFixed(6);
+                document.getElementById('oldLongitude').value = sharedLocation.longitude.toFixed(6);
+            }, function (error) {
+                alert('Error getting your location: ' + error.message);
+            });
+        } else {
+            alert('Geolocation is not supported by your browser');
+        }
+        event.preventDefault();
+    }
+
+    var distance;
+
+    function calculateDistance() {
+        // Get latitude and longitude values from the form
+        var newLatitude = parseFloat(document.getElementById('newLatitude').value);
+        var newLongitude = parseFloat(document.getElementById('newLongitude').value);
+
+        // Check if latitude and longitude are valid numbers
+        if (isNaN(newLatitude) || isNaN(newLongitude)) {
+            alert('Please enter valid latitude and longitude values.');
+            return;
+        }
+
+        newLocation.latitude = newLatitude;
+        newLocation.longitude = newLongitude;
+
+        // Calculate distance
+        var inputDistance = getDistance(sharedLocation.latitude, sharedLocation.longitude, newLocation.latitude, newLocation.longitude);
+        distance = parseFloat(inputDistance);
+
+        // Display the distance
+        document.getElementById('distance').value = 'Distance: ' + distance.toFixed(2) + ' km';
+       // document.getElementById('distance').innerText = 'Distance: ' + distance.toFixed(2) + ' km';
+        
+
+        event.preventDefault();
+    }
+
+    function getDistance(lat1, lon1, lat2, lon2) {
+        var R = 6371; // Radius of the Earth in kilometers
+        var dLat = deg2rad(lat2 - lat1);
+        var dLon = deg2rad(lon2 - lon1);
+        var a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        var distance = R * c;
+        return distance;
+    }
+
+    function deg2rad(deg) {
+        return deg * (Math.PI / 180);
+    }
+
+
+     //calculating price per kilometer
+     function calculatePrice() {
+        
+        // Get the distance from the user input
+        const distanceValue = distance;
+       //const distanceInput = document.getElementById("distance");
+        //const distanceValue = parseFloat(distanceInput.value)
+        //const distance = parseFloat(distanceInput.value);
+        //const distance = parseFloat(distanceInput.value);
+  
+        // Ensure that the entered distance is a valid number
+        if (isNaN(distanceValue) || distanceValue < 0) {
+          document.getElementById("transportFee").innerText = "Invalid distance";
+          return;
+        }
+  
+        // Define the transport charge per kilometer
+        //const chargePerKm = 29;
+        const transportChargePerKm = 29;
+        const serviceChargePerKm = 1;
+  
+        // Calculate the transportPrice
+        //const totalPrice = distance * transportChargePerKm;
+        const transportPrice = distance * transportChargePerKm;
+        const servicePrice = distance * serviceChargePerKm;
+  
+        // Display the result
+        document.getElementById("transportFee").value = transportPrice.toFixed(2);
+        //document.getElementById("transportFee").innerText = `The total price for ${distanceValue} km is ${totalPrice} Kenyan Shillings.`;
+        document.getElementById("serviceFee").value= servicePrice.toFixed(2);
+
+        event.preventDefault();
+      }
+    
+</script>
+    
+</body>
+</html>

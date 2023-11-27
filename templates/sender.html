@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="sender.css">
+  <title>SENDER</title>
+  <!-- style -->
+
+  <style>
+    body {
+   
+        margin: 0;
+        font-family: Arial, sans-serif;
+        
+      }
+    
+      .container {
+        max-width: 1200px; /* Set a maximum width for your content container */
+        margin: 0 auto; /* Center the container horizontally */
+      }
+      
+      .top-bar {
+        background-color: #2ecc71; /* Choose a background color for your top bar */
+        color: #fff;
+        text-align: center;
+        padding: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow for depth */
+        margin: 10px 0; /* Add top and bottom margin to create space */
+      }
+      
+      /* Additional styling for your top bar, adjust as needed */
+      .top-bar h1 {
+        margin: 0;
+        font-size: 24px;
+      }
+      
+      /* Rest of your styles for the page content */
+      
+      .button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-top: 100px; /* Adjust the top margin for spacing */
+        text-align: center; /* Center the buttons horizontally within the container */
+      }
+      
+      button {
+        padding: 20px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+        margin-bottom: 10px; /* Adjust the bottom margin for spacing */
+      }
+      
+      .primary-button {
+        background-color: #2ecc71;
+        color: #fff;
+      }
+      
+      .secondary-button {
+        background-color: #2ecc71;
+        color: #fff;
+      }
+      
+      button:hover {
+        filter: brightness(1.2);
+      }
+      
+  </style>
+
+</head>
+<body>
+
+    <div class="container">
+
+  <div class="top-bar">
+    <h1>SENDER</h1>
+  </div>
+
+  <div class="button-container">
+    <button onclick="redirectToTransporter()" id="transporter" class="primary-button">TRANSPORTER</button>
+    <button class="secondary-button">SHOPPER</button>
+  </div>
+
+
+    </div>
+
+
+    <script>
+      function redirectToTransporter() {
+        window.location.href = "{% url 'transporter' %}";
+    }
+    </script>
+
+
+  <!-- <script>
+    document.getElementById('transporter').addEventListener('click', function() {
+      window.location.href = 'transporter.html'; // Replace 'transporter.html' with the actual URL
+    });
+  </script> -->
+
+</body>
+</html>

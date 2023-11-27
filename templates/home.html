@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAIN PAGE</title>
+    <!-- <link rel="stylesheet" href="styles.css"> Link to your CSS file -->
+    <style>
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+      }
+      
+      
+      
+      .button-container {
+        display: flex;
+        flex-direction: column; /* Arrange buttons vertically */
+        gap: 15px; /* Adjust the vertical spacing between buttons */
+      }
+      
+      button {
+        padding: 20px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+      }
+      
+      .primary-button {
+        background-color:  #2ecc71;
+        color: #fff;
+      }
+      
+      .secondary-button {
+        background-color: #2ecc71;
+        color: #fff;
+      }
+      
+      .tertiary-button {
+        background-color:  #2ecc71;
+        color: #fff;
+      }
+      
+      button:hover {
+        filter: brightness(1.2);
+      }
+    </style>
+</head>
+<body>
+  
+ 
+    <!-- hold the whole page -->
+    <div class="center-container">
+        <!-- now a div for each -->
+        <div class="button-container">
+
+          <!-- {% if user.is_authenticated %} -->
+          <li>Hello,{{user.first_name}}</li>
+          <li><a href="{% url 'user_logout' %}">Logout</a></li>
+          <!-- {% else %} -->
+          <!-- <li><a href="accounts/register">Register</a></li>
+          <li><a href="accounts/login">Login</a></li> -->
+          <!-- {% endif %} -->
+            <button onclick="redirectToSenders()" id="myButton" class="primary-button">SENDER</button>
+            <button class="secondary-button">TRANSPORTER</button>
+            <button class="tertiary-button">SHOPPER</button>
+            
+          </div>
+    </div>
+
+   <script>
+    function redirectToSenders() {
+      window.location.href = "{% url 'sender' %}";
+  }
+   </script>
+
+    <!-- <script>
+        document.getElementById('myButton').addEventListener('click', function() {
+          window.location.href = 'sender.html'; // Replace 'sender.html' with the actual URL
+        });
+      </script> -->
+</body>
+</html>

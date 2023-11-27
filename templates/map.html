@@ -1,0 +1,43 @@
+<!-- map.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Users Map</title>
+    <!-- Include Leaflet CSS and JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+
+<div id="map" style="height: 500px;"></div>
+
+<script>
+    // Initialize the map
+    var mymap = L.map('map').setView([0, 0], 2);
+
+    // Add the base map layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(mymap);
+
+    // Function to add markers for online users
+    function addMarkers(onlineUsers) {
+        for (var i = 0; i < onlineUsers.length; i++) {
+            var user = onlineUsers[i];
+            if (user.latitude !== null && user.longitude !== null) {
+                var marker = L.marker([user.latitude, user.longitude]).addTo(mymap);
+                marker.bindPopup('<strong>' + user.user.username + '</strong><br>Online');
+            }
+        }
+    }
+
+    // Retrieve online users' data and add markers
+    var onlineUsers = JSON.parse('{{ online_users_json|escapejs }}');
+    addMarkers(onlineUsers);
+
+</script>
+
+</body>
+</html>
